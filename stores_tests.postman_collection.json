@@ -1,0 +1,308 @@
+{
+	"info": {
+		"_postman_id": "1dc017e7-3797-4d4d-ab70-61684a14a9d0",
+		"name": "Register and Authentication - Stores",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b41b44c6-3e94-4e91-acb7-330f837cb7c2",
+						"exec": [
+							"postman.clearEnvironmentVariable(\"access_token\");",
+							"",
+							"tests[\"Response time is less tan 200ms\"] = responseTime < 200;",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"User created successfully\"] = jsonData.message === 'User created successfully';",
+							"",
+							"tests[\"Content-Type is present in response\"] = postman.getResponseHeader('Content-Type');",
+							"tests[\"Content-Type is 'application/json'\"] = postman.getResponseHeader('Content-Type') === 'application/json';",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e918f4ad-9e32-4156-9f68-cc901a74460d",
+						"exec": [
+							"function generateUID() {",
+							"    // I generate the UID from two parts here ",
+							"    // to ensure the random number provide enough bits.",
+							"    var firstPart = (Math.random() * 46656) | 0;",
+							"    var secondPart = (Math.random() * 46656) | 0;",
+							"    firstPart = (\"000\" + firstPart.toString(36)).slice(-3);",
+							"    secondPart = (\"000\" + secondPart.toString(36)).slice(-3);",
+							"    return firstPart + secondPart;",
+							"}",
+							"random_uid = generateUID();",
+							"",
+							"uid = random_uid;",
+							"",
+							"postman.setEnvironmentVariable(\"uid\", uid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"thiagofgf_{{uid}}\",\n\t\"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register"
+					]
+				},
+				"description": "create user"
+			},
+			"response": []
+		},
+		{
+			"name": "/auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3a6a376a-de2f-45ea-a4dd-94895ffce7dd",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code == 200;",
+							"tests[\"Body contains access_token\"] = responseBody.has(\"access_token\");",
+							"tests[\"Response is less than 150ms\"] = responseTime < 150;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"thiagofgf_{{uid}}\",\n\t\"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/auth",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth"
+					]
+				},
+				"description": "Login users"
+			},
+			"response": []
+		},
+		{
+			"name": "/store/<name>",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c4248e2c-aedc-4800-9dd8-72b745ebf7a9",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"",
+							"tests[\"Store name is returned\"] = typeof jsonData.name !== \"undefined\";",
+							"tests[\"Store items list is empty\"] = jsonData.items.length === 0;",
+							"",
+							"tests[\"Status code is 201\"] = responseCode.code == 201;",
+							"tests[\"Response time is less than 150ms\"] = responseTime < 150;",
+							"",
+							"tests[\"Content-Type header is application/json\"] = postman.getResponseHeader(\"Content-Type\") === \"application/json\";"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2a066727-09ed-4c57-893b-e65d36b58bdb",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/store/CakeCo_{{uid}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"store",
+						"CakeCo_{{uid}}"
+					]
+				},
+				"description": "Creates a stores"
+			},
+			"response": []
+		},
+		{
+			"name": "/stores",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7993ec3-8a6e-4d9b-b191-363bfe0640f9",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code == 200;",
+							"tests[\"Response time is less than 150ms\"] = responseTime < 150;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/stores",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"stores"
+					]
+				},
+				"description": "Get all stores"
+			},
+			"response": []
+		},
+		{
+			"name": "/store/<name>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/store/CakeCo_{{uid}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"store",
+						"CakeCo_{{uid}}"
+					]
+				},
+				"description": "Get a store\n"
+			},
+			"response": []
+		},
+		{
+			"name": "/stores/<name>",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/store/CakeCo_{{uid}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"store",
+						"CakeCo_{{uid}}"
+					]
+				},
+				"description": "Delete a store"
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name>",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"price\":3.00,\n\t\"store_id\": 1\n}"
+				},
+				"url": {
+					"raw": "{{url}}/item/water",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"water"
+					]
+				},
+				"description": "Creates an item"
+			},
+			"response": []
+		}
+	]
+}
