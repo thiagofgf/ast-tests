@@ -1,0 +1,65 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pyc
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+node_modules/
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+db.sqlite3
+latest.dump.*
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Sublime project
+##################
+*.sublime-project
+*.sublime-workspace
+
+# Pycharm project
+##################
+venv
+staticfiles
+mediafiles
+idea
+.idea
+
+# Gulp
+##################
+node_modules
+
+# Personal Files #
+##################
+config.yml
+master.js
+tasks/shopify-config.js
+*.env
