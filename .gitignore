@@ -63,3 +63,4 @@ config.yml
 master.js
 tasks/shopify-config.js
 *.env
+*.db
